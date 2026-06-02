@@ -66,7 +66,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'GET') {
       const dbComments = await collection.find({}).sort({ createdAt: -1 }).toArray();
-      
+
       // Map MongoDB _id to string id for compatibility with the frontend code
       const formattedComments = dbComments.map(comment => ({
         id: comment._id.toString(),
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
       };
 
       const result = await collection.insertOne(newComment);
-      
+
       // Return response with string version of ObjectId
       return res.status(201).json({
         id: result.insertedId.toString(),
