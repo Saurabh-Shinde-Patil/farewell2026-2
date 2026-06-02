@@ -13,17 +13,9 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState("dark"); // Default to dark for premium neon feel
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    // First-time visitors always get dark mode; saved preference is respected on return
-    const initialTheme = savedTheme ?? "dark";
-    
-    setTheme(initialTheme);
-    
-    if (initialTheme === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    // Always start in dark mode on every load/refresh
+    setTheme("dark");
+    document.documentElement.classList.add("dark");
   }, []);
 
   const toggleTheme = () => {
