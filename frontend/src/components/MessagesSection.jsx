@@ -1,29 +1,15 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { motion } from "framer-motion";
 import { commentService } from "@/services/commentService";
-import { MessageSquare, Send, Loader2, Sparkles } from "lucide-react";
+import { MessageSquare, Send, Loader2, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import canvasConfetti from "canvas-confetti";
 
 const moodEmojis = ["❤️", "🎓", "🎉", "✨", "☕", "😎", "🚀", "🙌", "🥂"];
 
 /**
- * Helper to duplicate items to guarantee the marquee strip is wide enough
- * to loop seamlessly on all screen widths.
- */
-const fillMarqueeList = (list) => {
-  if (!list || list.length === 0) return [];
-  let result = [...list];
-  while (result.length < 12) {
-    result = [...result, ...list];
-  }
-  // Double it so translate(-50%) aligns exactly
-  return [...result, ...result];
-};
-
-/**
  * MessagesSection / Guestbook.
- * Renders a centered message submission form and an infinite,
- * continuous horizontal marquee slider of classmate farewell cards.
+ * Renders a centered message submission form and a single, draggable/swipeable
+ * horizontal slider of classmate farewell cards.
  */
 export default function MessagesSection() {
   const [comments, setComments] = useState([]);
@@ -33,6 +19,9 @@ export default function MessagesSection() {
   const [text, setText] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState("❤️");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const sliderRef = useRef(null);
+  const [dragConstraints, setDragConstraints] = useState({ left: 0, right: 0 });
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -47,6 +36,26 @@ export default function MessagesSection() {
     };
     fetchComments();
   }, []);
+
+  useEffect(() => {
+    const updateConstraints = () => {
+      if (sliderRef.current) {
+        const containerWidth = sliderRef.current.offsetWidth;
+        const scrollWidth = sliderRef.current.scrollWidth;
+        const maxDrag = scrollWidth - containerWidth;
+        setDragConstraints({ left: maxDrag > 0 ? -maxDrag : 0, right: 0 });
+      }
+    };
+
+    // Calculate constraints after render and state changes
+    const timer = setTimeout(updateConstraints, 500);
+    window.addEventListener("resize", updateConstraints);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", updateConstraints);
+    };
+  }, [comments, loading]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -77,6 +86,16 @@ export default function MessagesSection() {
       console.error("Failed to add message", err);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const scrollSlider = (direction) => {
+    if (sliderRef.current) {
+      const scrollAmount = 320;
+      sliderRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -193,11 +212,36 @@ export default function MessagesSection() {
           </motion.div>
         </div>
 
-        {/* Full-Width Continuous Marquee Comments Feed */}
+        {/* Drag/Swipe Instructions & Controls */}
+        {comments.length > 0 && !loading && (
+          <div className="flex items-center justify-between mb-4 max-w-5xl mx-auto px-2">
+            <span className="text-xs text-foreground/50 font-medium uppercase tracking-wider">
+              ← Click and drag or swipe horizontally to view messages →
+            </span>
+            <div className="flex gap-2">
+              <button
+                onClick={() => scrollSlider("left")}
+                className="p-2 rounded-full border border-card-border bg-card-bg hover:bg-neutral-100 dark:hover:bg-neutral-800/80 text-foreground cursor-pointer transition-all active:scale-90"
+                title="Scroll Left"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => scrollSlider("right")}
+                className="p-2 rounded-full border border-card-border bg-card-bg hover:bg-neutral-100 dark:hover:bg-neutral-800/80 text-foreground cursor-pointer transition-all active:scale-90"
+                title="Scroll Right"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Full-Width Draggable Comments Feed */}
         <div className="w-full overflow-hidden relative py-6">
           {/* Gradient fade borders */}
-          <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none" />
-          <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none" />
+          <div className="absolute inset-y-0 left-0 w-12 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-12 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none" />
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-12 gap-3">
@@ -210,80 +254,47 @@ export default function MessagesSection() {
               <p className="text-sm text-foreground/50">No notes written yet. Be the first to leave one!</p>
             </div>
           ) : (
-            <div className="flex flex-col gap-6">
-              {/* Row 1: Scrolling Left */}
-              <div className="overflow-hidden flex w-full">
-                <div className="animate-marquee flex gap-5">
-                  {fillMarqueeList(comments).map((comment, idx) => (
-                    <div
-                      key={`${comment.id}-row1-${idx}`}
-                      className="glass border border-card-border p-5 rounded-2xl w-[260px] sm:w-[300px] shrink-0 flex flex-col justify-between shadow-sm hover:shadow-lg hover:border-neon-purple/45 hover:scale-[1.01] transition-all duration-300 relative select-none"
-                    >
-                      <span className="absolute top-4 right-4 text-xl select-none" role="img" aria-label="mood">
-                        {comment.emoji}
-                      </span>
+            <div 
+              ref={sliderRef} 
+              className="overflow-x-auto flex w-full scrollbar-none snap-x snap-mandatory cursor-grab active:cursor-grabbing select-none"
+            >
+              <motion.div 
+                drag="x"
+                dragConstraints={dragConstraints}
+                dragElastic={0.15}
+                className="flex gap-5"
+              >
+                {comments.map((comment) => (
+                  <div
+                    key={comment.id}
+                    className="glass border border-card-border p-6 rounded-2xl w-[280px] sm:w-[320px] shrink-0 flex flex-col justify-between shadow-sm hover:shadow-md hover:border-neon-purple/40 transition-all duration-300 relative select-none snap-start"
+                  >
+                    <span className="absolute top-4 right-4 text-xl select-none" role="img" aria-label="mood">
+                      {comment.emoji}
+                    </span>
 
-                      <div>
-                        <div className="flex flex-col mb-3">
-                          <span className="font-sans font-bold text-sm text-foreground pr-8 truncate">
-                            {comment.author}
-                          </span>
-                          <span className="text-[10px] text-foreground/45 mt-0.5">
-                            {new Date(comment.createdAt).toLocaleDateString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </span>
-                        </div>
-
-                        <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-light line-clamp-4 whitespace-pre-wrap break-words">
-                          {comment.text}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Row 2: Scrolling Right (Reverse) */}
-              {comments.length > 2 && (
-                <div className="overflow-hidden flex w-full">
-                  <div className="animate-marquee-reverse flex gap-5">
-                    {fillMarqueeList([...comments].reverse()).map((comment, idx) => (
-                      <div
-                        key={`${comment.id}-row2-${idx}`}
-                        className="glass border border-card-border p-5 rounded-2xl w-[260px] sm:w-[300px] shrink-0 flex flex-col justify-between shadow-sm hover:shadow-lg hover:border-neon-pink/45 hover:scale-[1.01] transition-all duration-300 relative select-none"
-                      >
-                        <span className="absolute top-4 right-4 text-xl select-none" role="img" aria-label="mood">
-                          {comment.emoji}
+                    <div>
+                      <div className="flex flex-col mb-3">
+                        <span className="font-sans font-bold text-sm text-foreground pr-8 truncate">
+                          {comment.author}
                         </span>
-
-                        <div>
-                          <div className="flex flex-col mb-3">
-                            <span className="font-sans font-bold text-sm text-foreground pr-8 truncate">
-                              {comment.author}
-                            </span>
-                            <span className="text-[10px] text-foreground/45 mt-0.5">
-                              {new Date(comment.createdAt).toLocaleDateString(undefined, {
-                                month: "short",
-                                day: "numeric",
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </span>
-                          </div>
-
-                          <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-light line-clamp-4 whitespace-pre-wrap break-words">
-                            {comment.text}
-                          </p>
-                        </div>
+                        <span className="text-[10px] text-foreground/45 mt-0.5">
+                          {new Date(comment.createdAt).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </span>
                       </div>
-                    ))}
+
+                      <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-light whitespace-pre-wrap break-words">
+                        {comment.text}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )}
+                ))}
+              </motion.div>
             </div>
           )}
         </div>
