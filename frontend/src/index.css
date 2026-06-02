@@ -1,0 +1,167 @@
+@import "tailwindcss";
+
+:root {
+  /* Neon Light Theme */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --card-border: rgba(15, 23, 42, 0.08);
+  --neon-cyan: #06b6d4;
+  --neon-purple: #8b5cf6;
+  --neon-pink: #db2777;
+  
+  --neon-glow-cyan: 0 0 10px rgba(6, 182, 212, 0.15);
+  --neon-glow-purple: 0 0 10px rgba(139, 92, 246, 0.15);
+  --neon-glow-pink: 0 0 10px rgba(219, 39, 119, 0.15);
+}
+
+.dark {
+  /* Neon Dark Theme */
+  --background: #030303;
+  --foreground: #f8fafc;
+  --card-bg: rgba(9, 9, 11, 0.65);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --neon-cyan: #00f0ff;
+  --neon-purple: #bd00ff;
+  --neon-pink: #ff007f;
+  
+  --neon-glow-cyan: 0 0 15px rgba(0, 240, 255, 0.5), 0 0 5px rgba(0, 240, 255, 0.3);
+  --neon-glow-purple: 0 0 15px rgba(189, 0, 255, 0.5), 0 0 5px rgba(189, 0, 255, 0.3);
+  --neon-glow-pink: 0 0 15px rgba(255, 0, 127, 0.5), 0 0 5px rgba(255, 0, 127, 0.3);
+}
+
+@theme {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-purple: var(--neon-purple);
+  --color-neon-pink: var(--neon-pink);
+  --color-card-bg: var(--card-bg);
+  --color-card-border: var(--card-border);
+  
+  --font-sans: 'Outfit', Inter, sans-serif;
+  
+  --animate-neon-pulse: neon-pulse 2.5s infinite alternate;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 9s ease-in-out infinite;
+  --animate-gradient-shift: gradient-shift 15s ease infinite;
+
+  @keyframes neon-pulse {
+    from {
+      box-shadow: 0 0 4px var(--neon-cyan), 0 0 10px rgba(0, 240, 255, 0.2);
+    }
+    to {
+      box-shadow: 0 0 10px var(--neon-cyan), 0 0 25px rgba(0, 240, 255, 0.4);
+    }
+  }
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0) scale(1);
+    }
+    50% {
+      transform: translateY(-12px) scale(1.02);
+    }
+  }
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--neon-cyan), var(--neon-purple));
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--neon-pink), var(--neon-purple));
+}
+
+/* Glassmorphism Styles */
+.glass {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--card-border);
+}
+
+/* Glow Text Effects */
+.text-glow-cyan {
+  text-shadow: 0 0 8px rgba(6, 182, 212, 0.3);
+}
+.dark .text-glow-cyan {
+  text-shadow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 2px rgba(0, 240, 255, 0.8);
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+}
+.dark .text-glow-purple {
+  text-shadow: 0 0 15px rgba(189, 0, 255, 0.6), 0 0 2px rgba(189, 0, 255, 0.8);
+}
+
+.text-glow-pink {
+  text-shadow: 0 0 8px rgba(219, 39, 119, 0.3);
+}
+.dark .text-glow-pink {
+  text-shadow: 0 0 15px rgba(255, 0, 127, 0.6), 0 0 2px rgba(255, 0, 127, 0.8);
+}
+
+/* Glowing Neon Borders */
+.neon-border-cyan {
+  border: 1px solid var(--neon-cyan);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+}
+.dark .neon-border-cyan {
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.35), inset 0 0 10px rgba(0, 240, 255, 0.1);
+}
+
+.neon-border-purple {
+  border: 1px solid var(--neon-purple);
+  box-shadow: 0 0 10px rgba(139, 92, 246, 0.15);
+}
+.dark .neon-border-purple {
+  box-shadow: 0 0 15px rgba(189, 0, 255, 0.35), inset 0 0 10px rgba(189, 0, 255, 0.1);
+}
+
+.neon-border-pink {
+  border: 1px solid var(--neon-pink);
+  box-shadow: 0 0 10px rgba(219, 39, 119, 0.15);
+}
+.dark .neon-border-pink {
+  box-shadow: 0 0 15px rgba(255, 0, 127, 0.35), inset 0 0 10px rgba(255, 0, 127, 0.1);
+}
+
+/* Grid overlay background */
+.grid-bg {
+  background-image: 
+    linear-gradient(rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.dark .grid-bg {
+  background-image: 
+    linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+}

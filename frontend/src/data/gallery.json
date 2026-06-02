@@ -1,0 +1,65 @@
+[
+  {
+    "id": 1,
+    "title": "Our Class Portrait",
+    "category": "Campus",
+    "image": "/images/Photo1.jpg",
+    "description": "Nostalgic classroom moments captured together."
+  },
+  {
+    "id": 2,
+    "title": "Group Adventures",
+    "category": "Trips",
+    "image": "/images/Photo2.jpg",
+    "description": "Fun weekend escapes and travels during our four years."
+  },
+  {
+    "id": 3,
+    "title": "Unforgettable Celebrations",
+    "category": "Farewell",
+    "image": "/images/Photo3.jpg",
+    "description": "Toasting to our hard work, achievements, and beautiful journey."
+  },
+  {
+    "id": 4,
+    "title": "Academic Hustle",
+    "category": "Campus",
+    "image": "/images/Photo4.jpg",
+    "description": "Working on group labs and designing hardware prototypes."
+  },
+  {
+    "id": 5,
+    "title": "Laughter & Friendship",
+    "category": "Events",
+    "image": "/images/Photo5.jpg",
+    "description": "Candid smiles and coffee chats that kept us going."
+  },
+  {
+    "id": 6,
+    "title": "Cultural Night Lights",
+    "category": "Events",
+    "image": "/images/Photo6.jpg",
+    "description": "Cheering together under the spotlight of the college fest."
+  },
+  {
+    "id": 7,
+    "title": "Memorable Hangouts",
+    "category": "Campus",
+    "image": "/images/IMG-20260529-WA0001.jpg",
+    "description": "Catching up at our favorite spots around campus."
+  },
+  {
+    "id": 8,
+    "title": "Graduation Eve Gathering",
+    "category": "Farewell",
+    "image": "/images/IMG-20260529-WA0002.jpg",
+    "description": "Standing on the threshold of our next chapters."
+  },
+  {
+    "id": 9,
+    "title": "Sunset View Reunion",
+    "category": "Trips",
+    "image": "/images/IMG-20260529-WA0006.jpg",
+    "description": "Watching the sunset on our final class trip."
+  }
+]
