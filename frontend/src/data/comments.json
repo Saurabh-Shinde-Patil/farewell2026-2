@@ -1,0 +1,23 @@
+[
+  {
+    "id": "c1",
+    "author": "Anonymous",
+    "text": "Four years went by in the blink of an eye! Gonna miss everyone so much.",
+    "createdAt": "2026-06-02T18:30:00.000Z",
+    "emoji": "❤️"
+  },
+  {
+    "id": "c2",
+    "author": "CodeWizard",
+    "text": "Remember when we stayed up all night before the final project submission? What a time!",
+    "createdAt": "2026-06-02T19:45:00.000Z",
+    "emoji": "☕"
+  },
+  {
+    "id": "c3",
+    "author": "Backbench-Hero",
+    "text": "To all the bunked classes and proxy attendance... we survived!",
+    "createdAt": "2026-06-02T21:15:00.000Z",
+    "emoji": "😎"
+  }
+]

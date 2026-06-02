@@ -1,48 +1,31 @@
-const MOCK_COMMENTS = [
-  {
-    id: 'c1',
-    author: 'Anonymous',
-    text: 'Four years went by in the blink of an eye! Gonna miss everyone so much.',
-    createdAt: '2026-06-02T18:30:00.000Z',
-    emoji: '❤️'
-  },
-  {
-    id: 'c2',
-    author: 'CodeWizard',
-    text: 'Remember when we stayed up all night before the final project submission? What a time!',
-    createdAt: '2026-06-02T19:45:00.000Z',
-    emoji: '☕'
-  },
-  {
-    id: 'c3',
-    author: 'Backbench-Hero',
-    text: 'To all the bunked classes and proxy attendance... we survived!',
-    createdAt: '2026-06-02T21:15:00.000Z',
-    emoji: '😎'
-  }
-];
+import staticComments from "../data/comments.json";
 
 /**
- * Service to handle guestbook comments purely client-side via browser localStorage.
+ * Service to handle guestbook comments.
+ * - Fetches global persistent comments from `src/data/comments.json` (visible to everyone).
+ * - Saves and retrieves local browser-session comments from `localStorage` (visible to the author).
+ * - Merges both lists dynamically on page load.
  */
 export const commentService = {
   async getComments() {
     return new Promise((resolve) => {
       setTimeout(() => {
+        let localComments = [];
         if (typeof window !== 'undefined') {
-          const stored = localStorage.getItem('farewell_comments');
+          const stored = localStorage.getItem('farewell_comments_local');
           if (stored) {
             try {
-              resolve(JSON.parse(stored));
-              return;
+              localComments = JSON.parse(stored);
             } catch (e) {
               console.error('Failed to parse local comments', e);
             }
           }
-          localStorage.setItem('farewell_comments', JSON.stringify(MOCK_COMMENTS));
         }
-        resolve(MOCK_COMMENTS);
-      }, 400);
+        
+        // Merge local browser-specific comments with the global comments from comments.json
+        const mergedComments = [...localComments, ...staticComments];
+        resolve(mergedComments);
+      }, 300);
     });
   },
 
@@ -58,22 +41,22 @@ export const commentService = {
         };
 
         if (typeof window !== 'undefined') {
-          const stored = localStorage.getItem('farewell_comments');
-          let comments = MOCK_COMMENTS;
+          const stored = localStorage.getItem('farewell_comments_local');
+          let localComments = [];
           if (stored) {
             try {
-              comments = JSON.parse(stored);
+              localComments = JSON.parse(stored);
             } catch (e) {
               console.error('Failed to parse local comments', e);
             }
           }
-          const updated = [newComment, ...comments];
-          localStorage.setItem('farewell_comments', JSON.stringify(updated));
+          const updated = [newComment, ...localComments];
+          localStorage.setItem('farewell_comments_local', JSON.stringify(updated));
           resolve(newComment);
         } else {
           resolve(newComment);
         }
-      }, 300);
+      }, 200);
     });
   }
 };

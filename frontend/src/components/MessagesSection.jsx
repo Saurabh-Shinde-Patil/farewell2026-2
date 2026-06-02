@@ -1,15 +1,14 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { commentService } from "@/services/commentService";
-import { uploadService } from "@/services/uploadService";
-import { MessageSquare, Image as ImageIcon, Send, Loader2, Sparkles } from "lucide-react";
+import { MessageSquare, Send, Loader2, Sparkles } from "lucide-react";
 import canvasConfetti from "canvas-confetti";
 
 const moodEmojis = ["❤️", "🎓", "🎉", "✨", "☕", "😎", "🚀", "🙌", "🥂"];
 
 /**
  * MessagesSection / Guestbook.
- * Hooks into the comment/upload services and fires canvas-confetti.
+ * Hooks into the comment service and fires canvas-confetti.
  */
 export default function MessagesSection() {
   const [comments, setComments] = useState([]);
@@ -18,13 +17,7 @@ export default function MessagesSection() {
   const [name, setName] = useState("");
   const [text, setText] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState("❤️");
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [filePreview, setFilePreview] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-
-  const fileInputRef = useRef(null);
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -40,25 +33,6 @@ export default function MessagesSection() {
     fetchComments();
   }, []);
 
-  const handleFileChange = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setIsUploading(true);
-    setUploadProgress(20);
-
-    try {
-      const result = await uploadService.uploadImage(file);
-      setUploadProgress(100);
-      setSelectedFile(file);
-      setFilePreview(result.url);
-    } catch (err) {
-      alert("Failed to upload image: " + err.message);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!text.trim()) return;
@@ -72,17 +46,11 @@ export default function MessagesSection() {
         selectedEmoji
       );
 
-      if (filePreview) {
-        newComment.image = filePreview;
-      }
-
       setComments((prev) => [newComment, ...prev]);
 
       setName("");
       setText("");
       setSelectedEmoji("❤️");
-      setSelectedFile(null);
-      setFilePreview("");
 
       canvasConfetti({
         particleCount: 100,
@@ -195,55 +163,9 @@ export default function MessagesSection() {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 pt-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-foreground/60">
-                  Attach Photo (Integration Demo)
-                </span>
-                
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-
-                <div className="flex items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploading}
-                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-card-border bg-background/40 hover:bg-neutral-100 dark:hover:bg-neutral-800 text-xs font-semibold text-foreground/80 hover:text-foreground transition-all cursor-pointer"
-                  >
-                    {isUploading ? (
-                      <Loader2 className="w-4 h-4 animate-spin text-neon-purple" />
-                    ) : (
-                      <ImageIcon className="w-4 h-4 text-neon-purple" />
-                    )}
-                    {isUploading ? "Uploading..." : "Select Image"}
-                  </button>
-
-                  {filePreview && (
-                    <div className="relative w-12 h-12 rounded-lg border border-card-border overflow-hidden bg-neutral-900">
-                      <img src={filePreview} alt="Preview" className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedFile(null);
-                          setFilePreview("");
-                        }}
-                        className="absolute inset-0 bg-black/60 opacity-0 hover:opacity-100 flex items-center justify-center text-white transition-opacity text-[10px] font-bold cursor-pointer"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </div>
-
               <button
                 type="submit"
-                disabled={isSubmitting || isUploading}
+                disabled={isSubmitting}
                 className="w-full py-4.5 bg-gradient-to-r from-neon-purple via-neon-pink to-neon-cyan text-white hover:brightness-105 active:scale-[0.98] font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-[0_0_15px_rgba(189,0,255,0.2)] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
@@ -299,20 +221,10 @@ export default function MessagesSection() {
                           </span>
                         </div>
 
-                        <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-light whitespace-pre-wrap break-words mb-4">
+                        <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-light whitespace-pre-wrap break-words">
                           {comment.text}
                         </p>
                       </div>
-
-                      {comment.image && (
-                        <div className="mt-2 rounded-xl overflow-hidden border border-card-border max-h-[140px] bg-neutral-950/80">
-                          <img
-                            src={comment.image}
-                            alt="Attachment"
-                            className="w-full h-full object-cover"
-                          />
-                        </div>
-                      )}
                     </motion.div>
                   ))}
                 </AnimatePresence>
