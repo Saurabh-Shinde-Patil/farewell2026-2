@@ -61,7 +61,7 @@ export default async function handler(req, res) {
 
   try {
     const mongoClient = await clientPromise;
-    const db = mongoClient.db('farewell2026');
+    const db = mongoClient.db();
     const collection = db.collection('comments');
 
     if (req.method === 'GET') {

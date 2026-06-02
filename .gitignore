@@ -1,0 +1,7 @@
+# Local environment config containing sensitive database passwords
+.env
+.env.example
+node_modules/
+dist/
+.next/
+.DS_Store
