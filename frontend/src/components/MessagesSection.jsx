@@ -7,8 +7,23 @@ import canvasConfetti from "canvas-confetti";
 const moodEmojis = ["❤️", "🎓", "🎉", "✨", "☕", "😎", "🚀", "🙌", "🥂"];
 
 /**
+ * Helper to duplicate items to guarantee the marquee strip is wide enough
+ * to loop seamlessly on all screen widths.
+ */
+const fillMarqueeList = (list) => {
+  if (!list || list.length === 0) return [];
+  let result = [...list];
+  while (result.length < 12) {
+    result = [...result, ...list];
+  }
+  // Double it so translate(-50%) aligns exactly
+  return [...result, ...result];
+};
+
+/**
  * MessagesSection / Guestbook.
- * Hooks into the comment service and fires canvas-confetti.
+ * Renders a centered message submission form and an infinite,
+ * continuous horizontal marquee slider of classmate farewell cards.
  */
 export default function MessagesSection() {
   const [comments, setComments] = useState([]);
@@ -66,11 +81,11 @@ export default function MessagesSection() {
   };
 
   return (
-    <section id="messages" className="relative py-28 bg-background overflow-hidden">
-      <div className="absolute top-1/3 left-10 w-[20vw] h-[20vw] bg-neon-pink/5 rounded-full blur-[80px] pointer-events-none animate-float" />
-      <div className="absolute bottom-1/3 right-10 w-[20vw] h-[20vw] bg-neon-cyan/5 rounded-full blur-[80px] pointer-events-none animate-float-slow" />
+    <section id="messages" className="relative py-28 bg-background overflow-hidden border-t border-card-border/50">
+      <div className="absolute top-1/4 left-1/4 w-[40vw] h-[40vw] bg-neon-purple/5 rounded-full blur-[120px] pointer-events-none -z-10 animate-float" />
+      <div className="absolute bottom-1/4 right-1/4 w-[30vw] h-[30vw] bg-neon-cyan/5 rounded-full blur-[100px] pointer-events-none -z-10 animate-float-slow" />
 
-      <div className="max-w-6xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
         
         {/* Section Title */}
         <div className="text-center mb-16">
@@ -94,15 +109,14 @@ export default function MessagesSection() {
           </motion.h2>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 items-start">
-          
-          {/* Post Message Form Card */}
+        {/* Post Message Form Card */}
+        <div className="max-w-xl mx-auto mb-16">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="glass rounded-3xl p-6 md:p-8 border border-card-border shadow-xl lg:col-span-2 relative overflow-hidden"
+            className="glass rounded-3xl p-6 md:p-8 border border-card-border shadow-xl relative overflow-hidden"
           >
             <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-neon-purple via-neon-pink to-neon-cyan" />
 
@@ -133,7 +147,7 @@ export default function MessagesSection() {
                 <textarea
                   id="messageText"
                   required
-                  rows="4"
+                  rows="3"
                   placeholder="Share a memory, joke, or say goodbye..."
                   value={text}
                   onChange={(e) => setText(e.target.value)}
@@ -177,30 +191,33 @@ export default function MessagesSection() {
               </button>
             </form>
           </motion.div>
+        </div>
 
-          {/* Comments Feed */}
-          <div className="lg:col-span-3 space-y-6 max-h-[600px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-card-border">
-            {loading ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-3">
-                <Loader2 className="w-8 h-8 animate-spin text-neon-purple" />
-                <span className="text-xs text-foreground/50">Loading notes...</span>
-              </div>
-            ) : comments.length === 0 ? (
-              <div className="text-center py-20 border border-dashed border-card-border rounded-3xl bg-neutral-50/20 dark:bg-neutral-950/10">
-                <MessageSquare className="w-8 h-8 mx-auto text-foreground/30 mb-3" />
-                <p className="text-sm text-foreground/50">No notes written yet. Be the first to leave one!</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <AnimatePresence initial={false}>
-                  {comments.map((comment) => (
-                    <motion.div
-                      key={comment.id}
-                      initial={{ opacity: 0, scale: 0.9, y: 15 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.9, y: -15 }}
-                      transition={{ duration: 0.4 }}
-                      className="glass border border-card-border p-5 rounded-2xl flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow relative group"
+        {/* Full-Width Continuous Marquee Comments Feed */}
+        <div className="w-full overflow-hidden relative py-6">
+          {/* Gradient fade borders */}
+          <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none" />
+          <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none" />
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12 gap-3">
+              <Loader2 className="w-8 h-8 animate-spin text-neon-purple" />
+              <span className="text-xs text-foreground/50">Loading notes...</span>
+            </div>
+          ) : comments.length === 0 ? (
+            <div className="text-center py-12 border border-dashed border-card-border rounded-3xl bg-neutral-50/20 dark:bg-neutral-950/10 max-w-lg mx-auto">
+              <MessageSquare className="w-8 h-8 mx-auto text-foreground/30 mb-3" />
+              <p className="text-sm text-foreground/50">No notes written yet. Be the first to leave one!</p>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-6">
+              {/* Row 1: Scrolling Left */}
+              <div className="overflow-hidden flex w-full">
+                <div className="animate-marquee flex gap-5">
+                  {fillMarqueeList(comments).map((comment, idx) => (
+                    <div
+                      key={`${comment.id}-row1-${idx}`}
+                      className="glass border border-card-border p-5 rounded-2xl w-[260px] sm:w-[300px] shrink-0 flex flex-col justify-between shadow-sm hover:shadow-lg hover:border-neon-purple/45 hover:scale-[1.01] transition-all duration-300 relative select-none"
                     >
                       <span className="absolute top-4 right-4 text-xl select-none" role="img" aria-label="mood">
                         {comment.emoji}
@@ -208,7 +225,7 @@ export default function MessagesSection() {
 
                       <div>
                         <div className="flex flex-col mb-3">
-                          <span className="font-sans font-bold text-sm text-foreground pr-8 break-all">
+                          <span className="font-sans font-bold text-sm text-foreground pr-8 truncate">
                             {comment.author}
                           </span>
                           <span className="text-[10px] text-foreground/45 mt-0.5">
@@ -221,18 +238,56 @@ export default function MessagesSection() {
                           </span>
                         </div>
 
-                        <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-light whitespace-pre-wrap break-words">
+                        <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-light line-clamp-4 whitespace-pre-wrap break-words">
                           {comment.text}
                         </p>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
-                </AnimatePresence>
+                </div>
               </div>
-            )}
-          </div>
 
+              {/* Row 2: Scrolling Right (Reverse) */}
+              {comments.length > 2 && (
+                <div className="overflow-hidden flex w-full">
+                  <div className="animate-marquee-reverse flex gap-5">
+                    {fillMarqueeList([...comments].reverse()).map((comment, idx) => (
+                      <div
+                        key={`${comment.id}-row2-${idx}`}
+                        className="glass border border-card-border p-5 rounded-2xl w-[260px] sm:w-[300px] shrink-0 flex flex-col justify-between shadow-sm hover:shadow-lg hover:border-neon-pink/45 hover:scale-[1.01] transition-all duration-300 relative select-none"
+                      >
+                        <span className="absolute top-4 right-4 text-xl select-none" role="img" aria-label="mood">
+                          {comment.emoji}
+                        </span>
+
+                        <div>
+                          <div className="flex flex-col mb-3">
+                            <span className="font-sans font-bold text-sm text-foreground pr-8 truncate">
+                              {comment.author}
+                            </span>
+                            <span className="text-[10px] text-foreground/45 mt-0.5">
+                              {new Date(comment.createdAt).toLocaleDateString(undefined, {
+                                month: "short",
+                                day: "numeric",
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </span>
+                          </div>
+
+                          <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-light line-clamp-4 whitespace-pre-wrap break-words">
+                            {comment.text}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
+
       </div>
     </section>
   );
