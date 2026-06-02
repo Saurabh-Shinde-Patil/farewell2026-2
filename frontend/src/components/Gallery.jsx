@@ -196,7 +196,7 @@ export default function Gallery() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="font-sans font-extrabold text-3xl sm:text-4xl tracking-tight text-foreground"
+              className="neon-heading neon-heading--multi font-sans font-extrabold text-3xl sm:text-4xl tracking-tight"
             >
               Moments We Captured
             </motion.h2>

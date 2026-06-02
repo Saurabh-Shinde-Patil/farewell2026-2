@@ -115,16 +115,16 @@ export default function MessagesSection() {
             className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-card-bg border border-card-border shadow-sm text-xs font-semibold text-neon-purple uppercase tracking-wider mb-3"
           >
             <MessageSquare className="w-3.5 h-3.5" />
-            <span>Digital Guestbook</span>
+            <span>Anonymous Comments</span>
           </motion.div>
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="font-sans font-extrabold text-3xl sm:text-4xl tracking-tight text-foreground"
+            className="neon-heading neon-heading--cyan font-sans font-extrabold text-3xl sm:text-4xl tracking-tight"
           >
-            Leave a Farewell Message
+            Drop an Anonymous Comment
           </motion.h2>
         </div>
 
@@ -161,7 +161,7 @@ export default function MessagesSection() {
 
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="messageText" className="text-xs font-bold uppercase tracking-wider text-foreground/60">
-                  Farewell Note
+                  Anonymous Note
                 </label>
                 <textarea
                   id="messageText"

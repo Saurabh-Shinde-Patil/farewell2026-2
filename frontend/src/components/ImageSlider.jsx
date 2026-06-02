@@ -55,7 +55,7 @@ export default function ImageSlider() {
             <Images className="w-3.5 h-3.5" />
             <span>Memories Slideshow</span>
           </div>
-          <h2 className="font-sans font-extrabold text-3xl tracking-tight text-foreground">
+          <h2 className="neon-heading neon-heading--pink font-sans font-extrabold text-3xl tracking-tight">
             Our Automated Memory Reel
           </h2>
           <p className="text-xs text-foreground/50 mt-1.5 uppercase tracking-wider font-bold">
