@@ -35,9 +35,9 @@ export default function VideoSection() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="neon-heading neon-heading--purple font-sans font-extrabold text-3xl sm:text-4xl tracking-tight"
+            className="neon-heading neon-heading--multi font-sans font-extrabold text-3xl sm:text-4xl tracking-tight"
           >
-            Our Farewell Documentary
+            Farewell Documentary
           </motion.h2>
         </div>
 

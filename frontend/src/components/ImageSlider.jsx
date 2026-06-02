@@ -47,7 +47,7 @@ export default function ImageSlider() {
       <div className="absolute top-10 left-0 w-[30vw] h-[30vw] bg-neon-pink/10 rounded-full blur-[100px] pointer-events-none" />
       <div className="absolute bottom-10 right-0 w-[30vw] h-[30vw] bg-neon-cyan/10 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto px-6 md:px-12 relative z-10">
+      <div className="max-w-5xl mx-auto px-3 sm:px-6 md:px-12 relative z-10">
         
         {/* Title */}
         <div className="text-center mb-12">
@@ -56,7 +56,7 @@ export default function ImageSlider() {
             <span>Memories Slideshow</span>
           </div>
           <h2 className="neon-heading neon-heading--pink font-sans font-extrabold text-3xl tracking-tight">
-            Our Automated Memory Reel
+            Automated Memory Reel
           </h2>
           <p className="text-xs text-foreground/50 mt-1.5 uppercase tracking-wider font-bold">
             Looping {images.length} Captured Moments
@@ -64,7 +64,7 @@ export default function ImageSlider() {
         </div>
 
         {/* Slider Container Frame */}
-        <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] rounded-3xl overflow-hidden shadow-2xl border border-card-border bg-neutral-950 flex items-center justify-center group">
+        <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] rounded-xl sm:rounded-3xl overflow-hidden shadow-md sm:shadow-2xl border border-card-border/50 bg-neutral-950 flex items-center justify-center group">
           
           {/* Blurred duplication background */}
           <div

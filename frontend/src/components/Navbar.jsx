@@ -109,7 +109,7 @@ export default function Navbar() {
             onClick={(e) => handleLinkClick(e, "#messages")}
             className="px-5 py-2 text-xs font-semibold uppercase tracking-wider text-black bg-neon-cyan hover:bg-neon-cyan/85 dark:text-black dark:bg-neon-cyan dark:hover:bg-neon-cyan/90 rounded-full shadow-[0_0_12px_rgba(0,240,255,0.3)] transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-neon-cyan cursor-pointer"
           >
-            Leave Message
+            Comment Anonymously
           </a>
         </div>
 
@@ -170,7 +170,7 @@ export default function Navbar() {
                   onClick={(e) => handleLinkClick(e, "#messages")}
                   className="w-full py-3 text-center text-sm font-semibold uppercase tracking-wider text-black bg-neon-cyan hover:bg-neon-cyan/90 rounded-xl shadow-md transition-all cursor-pointer"
                 >
-                  Leave Message
+                  Comment Anonymously
                 </a>
               </motion.div>
             </div>
