@@ -43,14 +43,20 @@ export default function Navbar() {
 
   const handleLinkClick = (e, href) => {
     e.preventDefault();
+    const isMobileOpen = isOpen;
     setIsOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      window.scrollTo({
-        top: target.offsetTop - 80,
-        behavior: "smooth",
-      });
-    }
+    // On mobile, wait for the drawer close animation before scrolling
+    // so the layout shift doesn't throw off the target offset
+    const delay = isMobileOpen ? 350 : 0;
+    setTimeout(() => {
+      const target = document.querySelector(href);
+      if (target) {
+        window.scrollTo({
+          top: target.offsetTop - 80,
+          behavior: "smooth",
+        });
+      }
+    }, delay);
   };
 
   return (
@@ -69,7 +75,7 @@ export default function Navbar() {
         >
           <GraduationCap className="w-7 h-7 text-neon-cyan group-hover:rotate-12 transition-transform duration-300" />
           <span className="font-sans font-bold text-xl tracking-tight bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-pink bg-clip-text text-transparent">
-            Farewell '26
+            Farewell 2026
           </span>
         </a>
 

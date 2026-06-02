@@ -14,8 +14,8 @@ export function ThemeProvider({ children }) {
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const initialTheme = savedTheme || (systemPrefersDark ? "dark" : "light");
+    // First-time visitors always get dark mode; saved preference is respected on return
+    const initialTheme = savedTheme ?? "dark";
     
     setTheme(initialTheme);
     

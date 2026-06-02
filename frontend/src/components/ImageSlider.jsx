@@ -64,7 +64,7 @@ export default function ImageSlider() {
         </div>
 
         {/* Slider Container Frame */}
-        <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] rounded-xl sm:rounded-3xl overflow-hidden shadow-md sm:shadow-2xl border border-card-border/50 bg-neutral-950 flex items-center justify-center group">
+        <div className="relative w-full aspect-[4/3] sm:aspect-[16/9] rounded-xl sm:rounded-2xl overflow-hidden border border-white/10 bg-neutral-950 flex items-center justify-center group">
           
           {/* Blurred duplication background */}
           <div
