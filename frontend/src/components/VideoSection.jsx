@@ -7,6 +7,14 @@ import configData from "@/data/config.json";
  * Pulls the iframe URL, Title, and Description from config.json.
  */
 export default function VideoSection() {
+  const videos = configData.videos || [
+    {
+      url: configData.youtubeUrl,
+      title: configData.youtubeTitle,
+      description: configData.youtubeDescription,
+    },
+  ];
+
   return (
     <section
       id="video"
@@ -41,38 +49,43 @@ export default function VideoSection() {
           </motion.h2>
         </div>
 
-        {/* Video Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="glass neon-border-purple rounded-3xl p-4 md:p-6 shadow-2xl relative overflow-hidden group max-w-4xl mx-auto"
-        >
-          <div className="absolute -inset-px bg-gradient-to-r from-neon-cyan/20 via-neon-purple/20 to-neon-pink/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+        {/* Video Cards Grid/List */}
+        <div className="flex flex-col gap-12 max-w-4xl mx-auto">
+          {videos.map((video, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 0.8, ease: "easeOut", delay: index * 0.1 }}
+              className="glass neon-border-purple rounded-3xl p-4 md:p-6 shadow-2xl relative overflow-hidden group w-full"
+            >
+              <div className="absolute -inset-px bg-gradient-to-r from-neon-cyan/20 via-neon-purple/20 to-neon-pink/20 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
 
-          {/* Player container */}
-          <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-neutral-900 border border-card-border/40 shadow-inner">
-            <iframe
-              src={configData.youtubeUrl}
-              title={configData.youtubeTitle}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-              className="absolute inset-0 w-full h-full border-0"
-              loading="lazy"
-            />
-          </div>
+              {/* Player container */}
+              <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-neutral-900 border border-card-border/40 shadow-inner">
+                <iframe
+                  src={video.url}
+                  title={video.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full border-0"
+                  loading="lazy"
+                />
+              </div>
 
-          {/* Meta Info */}
-          <div className="mt-6 md:mt-8 px-2">
-            <h3 className="font-sans font-bold text-xl sm:text-2xl text-foreground mb-3 text-glow-purple">
-              {configData.youtubeTitle}
-            </h3>
-            <p className="text-sm sm:text-base text-foreground/75 leading-relaxed font-light">
-              {configData.youtubeDescription}
-            </p>
-          </div>
-        </motion.div>
+              {/* Meta Info */}
+              <div className="mt-6 md:mt-8 px-2">
+                <h3 className="font-sans font-bold text-xl sm:text-2xl text-foreground mb-3 text-glow-purple">
+                  {video.title}
+                </h3>
+                <p className="text-sm sm:text-base text-foreground/75 leading-relaxed font-light">
+                  {video.description}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

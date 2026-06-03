@@ -2,6 +2,18 @@
   "youtubeUrl": "https://www.youtube.com/embed/I0FAhxO8AdU?si=7NvLtut2XzMHCIBB",
   "youtubeTitle": "Batch-2026 || Once Classmates, Forever Friends",
   "youtubeDescription": "Four years. Thousands of memories. One unforgettable journey. Retrace our shared laughs, struggles, and triumphs in this special batch farewell video.",
+  "videos": [
+    {
+      "url": "https://www.youtube.com/embed/I0FAhxO8AdU?si=7NvLtut2XzMHCIBB",
+      "title": "Batch-2026 || Once Classmates, Forever Friends",
+      "description": "Four years. Thousands of memories. One unforgettable journey. Retrace our shared laughs, struggles, and triumphs in this special batch farewell video."
+    },
+    {
+      "url": "https://www.youtube.com/embed/04I3gLzuUZ4?si=i7voebMUF5jIexbV",
+      "title": "Batch-2026 || Edited By MAYUR RATHOD",
+      "description": "More moments from our four years together. A second compilation of struggles, laughs, and unforgettable friendships."
+    }
+  ],
   "mosaicImagePath": "/mosaic/farewell_mosaic.jpg",
   "mosaicTitle": "Every Picture Tells a Story",
   "mosaicDescription": "Our journey, pixelated into a single masterpiece. Click zoom to explore individual faces that defined our memorable four years.",
