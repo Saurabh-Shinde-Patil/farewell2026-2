@@ -3,9 +3,45 @@ import { Film } from "lucide-react";
 import configData from "@/data/config.json";
 
 /**
- * Responsive Video Section.
- * Pulls the iframe URL, Title, and Description from config.json.
+ * Helper to convert standard YouTube links, share links, or shorts to iframe embed URLs.
  */
+const getEmbedUrl = (url) => {
+  if (!url) return "";
+  if (url.includes("/embed/")) return url;
+
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+
+  if (match && match[2].length === 11) {
+    const videoId = match[2];
+    let embedUrl = `https://www.youtube.com/embed/${videoId}`;
+    try {
+      const urlObj = new URL(url);
+      const si = urlObj.searchParams.get("si");
+      const t = urlObj.searchParams.get("t");
+      const params = [];
+      if (si) params.push(`si=${si}`);
+      if (t) params.push(`start=${t}`);
+      if (params.length > 0) {
+        embedUrl += `?${params.join("&")}`;
+      }
+    } catch (e) {
+      // Ignore URL parsing errors
+    }
+    return embedUrl;
+  }
+
+  if (url.includes("/shorts/")) {
+    const parts = url.split("/shorts/");
+    if (parts.length > 1) {
+      const videoId = parts[1].split(/[?#&]/)[0];
+      return `https://www.youtube.com/embed/${videoId}`;
+    }
+  }
+
+  return url;
+};
+
 export default function VideoSection() {
   const videos = configData.videos || [
     {
@@ -65,7 +101,7 @@ export default function VideoSection() {
               {/* Player container */}
               <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-neutral-900 border border-card-border/40 shadow-inner">
                 <iframe
-                  src={video.url}
+                  src={getEmbedUrl(video.url)}
                   title={video.title}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
